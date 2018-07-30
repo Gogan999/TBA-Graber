@@ -1,5 +1,7 @@
 import requests #stuff for https data retreaval
 import json #Cuz the datas steralized 
+import os #cuz file path stuff
+
 
 print("This line will hopefully be printed.") #cuz idk what im doing
 
@@ -12,7 +14,9 @@ while (x <= 10):
     print("Shit is counting: ", x)
     x = x + 1
 
+TBA = 'https://www.thebluealliance.com/api/v3'
 status = {'X-TBA-Auth-Key':'ir3K1D1jaFLVPteNNBo7Q3CeZocBaEU8kIygdLmBMqHOq7fthFiwffAbi5s25NpO'} #seting up auth key
+
 r = requests.get('https://www.thebluealliance.com/api/v3/event/2018mndu/teams/simple', params=status) #requesting info from TBA
 print(r)
 print(r.text)
@@ -29,8 +33,18 @@ print(teams[0]) #Prints team 0 in list
 while ( n >= 0 ): #works backwards to 0 listing off all team numbers 
     print(teams[n])
     n = n - 1
+    
+def eventMatchPuller(eventKey):
+    evData = requests.get(TBA + '/event/' + eventKey + '/matches', params=status)
+    evDataJson = json.loads(evData.text)
+    if not os.path.exists('data/events/'):
+        os.makedirs('data/events/')
+    with open('data/events/' + eventKey + '.json', 'w') as outfile:
+        json.dump(evDataJson, outfile)
 
+eventMatchPuller('2018mndu')
 
+print('here')
 """ Goals
 Multy thread program?
 Take match data and dump to regonal folder
