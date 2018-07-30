@@ -32,6 +32,7 @@ while ( n >= 0 ): #works backwards to 0 listing off all team numbers
 
 
 """ Goals
+Multy thread program?
 Take match data and dump to regonal folder
     https://www.thebluealliance.com/api/v3/event/2018mndu/matches
 Figure pull match numbers then look up in regonal folder?
