@@ -22,7 +22,7 @@ teams = [] #soon to be list of team numbers
 for team in stuffs:                   #sorts through stuffs deviding it up into team     
     teams.append(team["team_number"]) #adds team number to the end of the list teams
 
-n = len(teams) - 1 #gets totel number of team 
+n = len(teams) - 1 #gets total number of teams in index 0
 
 print(teams[0]) #Prints team 0 in list
 
