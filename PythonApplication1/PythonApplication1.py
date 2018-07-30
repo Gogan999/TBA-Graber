@@ -43,6 +43,7 @@ while ( n >= 0 ): #as long as we have more than one team left in out list counte
     n = n - 1 #now change our list counter down one and do this for each subsequent team until it gets to zero
 regionals=list(set(regionals)) #this gets rid of duplicates in the list "regionals"
 #the list "regionals" now has all of the events attended by all of the teams in the regional specified in the original stuffs link
+
 """ Goals
 Multy thread program?
 Take match data and dump to regonal folder
