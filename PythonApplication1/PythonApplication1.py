@@ -33,7 +33,6 @@ while ( n >= 0 ): #works backwards to 0 listing off all team numbers
 n = len(teams) - 1 #resetting the team list for my while loop iteration
 
 regionals = [] #making a list of regionals attended by the teams in the "teams" list
-tempteamjsontext = 0
 while ( n >= 0 ): #as long as we have more than one team left in out list counter 
     teamiterate = teams[n] #use that teams index to get the team_key  
     linkR = 'https://www.thebluealliance.com/api/v3/team/'+ str(teamiterate) + '/events/2018'
@@ -42,6 +41,7 @@ while ( n >= 0 ): #as long as we have more than one team left in out list counte
     for i in regionaltext: #now we iterate through this list
         regionals.append("2018" + i["event_code"]) #and add every event code to the list "regionals"
     n = n - 1 #now change our list counter down one and do this for each subsequent team until it gets to zero
+regionals=list(set(regionals))
 #the list "regionals" now has all of the events attended by all of the teams in the regional specified in the original stuffs link
 """ Goals
 Multy thread program?
