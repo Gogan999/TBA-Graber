@@ -41,13 +41,6 @@ if (date["date"] != str(datetime.date.today())): #Checks to see if last updated 
     regionals=list(set(regionals)) #this gets rid of duplicates in the list "regionals"
     #the list "regionals" now has all of the events attended by all of the teams in the regional specified in the original stuffs link
 
-#take all the match data for a team across regionals and put it into a folder
-#find a team to find match data for
-#check if a folder is created for that team or create a folder for that team
-#find all the matches that particular team participated in
-#retrive all of the .json files of the matches that team participated in
-#store the .jsons in the folder that was created/checked
-#do this for every team in the regional specified under the stuffs variable 
 
 """ Goals
 Multy thread program?
@@ -84,4 +77,17 @@ if (date["date"] != str(datetime.date.today())): #Checks to see if last updated 
         dateJson = {
         "date": date
         }
-        json.dump(dateJson, outfile)         
+        json.dump(dateJson, outfile) 
+        
+
+
+
+#take all the match data for a team across regionals and put it into a folder
+
+
+#find a team to find match data for
+#check if a folder is created for that team or create a folder for that team
+#find all the matches that particular team participated in
+#retrive all of the .json files of the matches that team participated in
+#store the .jsons in the folder that was created/checked
+#do this for every team in the regional specified under the stuffs variable 
