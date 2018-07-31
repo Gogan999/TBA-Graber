@@ -47,5 +47,3 @@ Flieing ideas
         Events
             2018mndu
 """
-
-#jeef is dip
