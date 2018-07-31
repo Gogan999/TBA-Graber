@@ -1,7 +1,9 @@
 import requests #stuff for https data retreaval
 import json #Cuz the datas steralized 
 import os #cuz file path stuff
-import datetime
+import datetime #too keep data from constantly updating
+import threading #must go faster
+import time #sometimes you just got to slow down you know
 
 TBA = 'https://www.thebluealliance.com/api/v3'
 status = {'X-TBA-Auth-Key':'ir3K1D1jaFLVPteNNBo7Q3CeZocBaEU8kIygdLmBMqHOq7fthFiwffAbi5s25NpO'} #seting up auth key
@@ -32,8 +34,8 @@ if (date["date"] != str(datetime.date.today())): #Checks to see if last updated 
     
     regionals = [] #making a list of regionals attended by the teams in the "teams" list
     print('Gathering Data')
-    while ( n >= 0 ): #as long as we have more than one team left in out list counter 
-        teamiterate = teams[n] #use that teams index to get the team_key
+
+    def HunterFunction(teamiterate): #function for retreaving all the events a team has gonr to0
         print(teamiterate, end='')
         linkR = 'https://www.thebluealliance.com/api/v3/team/'+ str(teamiterate) + '/events/2018'
         tempteamjsontext = requests.get(linkR, params=status) #then assign the json file we retrive for that team to "tempteamjsontext"
@@ -42,10 +44,11 @@ if (date["date"] != str(datetime.date.today())): #Checks to see if last updated 
             regionals.append("2018" + i["event_code"]) #and add every event code to the list "regionals"
             print('---', end='')
         print('')
-        n = n - 1 #now change our list counter down one and do this for each subsequent team until it gets to zero
+
+    for n in teams: #Iderates through all of the teams 
+        HunterFunction(n)
     regionals=list(set(regionals)) #this gets rid of duplicates in the list "regionals"
     #the list "regionals" now has all of the events attended by all of the teams in the regional specified in the original stuffs link
-
 
 """ Goals
 Multy thread program?
@@ -69,16 +72,22 @@ Flieing ideas
 def eventMatchPuller(eventKey): #Function for requesting event matches and then writing them to a file path
     evData = requests.get(TBA + '/event/' + eventKey + '/matches', params=status)
     evDataJson = json.loads(evData.text)
-    print(' --- ', end='')
     with open('data/events/' + eventKey + '.json', 'w') as outfile:
         json.dump(evDataJson, outfile)
-        print('Dumped')
+        print(eventKey + ' Loaded')
 
 if (date["date"] != str(datetime.date.today())): #Checks to see if last updated json was created
     print('Writing Data')
+    threads = []
     for i in regionals:
-        print(i, end='')
-        eventMatchPuller(i)
+        t = threading.Thread(target=eventMatchPuller(i))
+        t.daemon = True
+        t.start()
+        threads.append(t)
+
+    for t in threads:
+        t.join()
+
     print('All Data Aquired')
 
 if (date["date"] != str(datetime.date.today())): #Checks to see if last updated json was created
