@@ -34,16 +34,6 @@ while ( n >= 0 ): #works backwards to 0 listing off all team numbers
     print(teams[n])
     n = n - 1
     
-def eventMatchPuller(eventKey):
-    evData = requests.get(TBA + '/event/' + eventKey + '/matches', params=status)
-    evDataJson = json.loads(evData.text)
-    if not os.path.exists('data/events/'):
-        os.makedirs('data/events/')
-    with open('data/events/' + eventKey + '.json', 'w') as outfile:
-        json.dump(evDataJson, outfile)
-
-eventMatchPuller('2018mndu')
-
 n = len(teams) - 1 #resetting the team list for my while loop iteration
 
 regionals = [] #making a list of regionals attended by the teams in the "teams" list
@@ -57,7 +47,7 @@ while ( n >= 0 ): #as long as we have more than one team left in out list counte
     n = n - 1 #now change our list counter down one and do this for each subsequent team until it gets to zero
 regionals=list(set(regionals))
 #the list "regionals" now has all of the events attended by all of the teams in the regional specified in the original stuffs link
-print('here')
+
 """ Goals
 Multy thread program?
 Take match data and dump to regonal folder
@@ -75,4 +65,15 @@ Flieing ideas
             2018mndu
 """
 
-#jeef is dip
+def eventMatchPuller(eventKey):
+    evData = requests.get(TBA + '/event/' + eventKey + '/matches', params=status)
+    evDataJson = json.loads(evData.text)
+    if not os.path.exists('data/events/'):
+        os.makedirs('data/events/')
+    with open('data/events/' + eventKey + '.json', 'w') as outfile:
+        json.dump(evDataJson, outfile)
+
+for i in regionals:
+    eventMatchPuller(i)
+
+eventMatchPuller('2018mndu')
