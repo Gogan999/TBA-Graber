@@ -44,7 +44,7 @@ if (date["date"] != str(datetime.date.today())): #Checks to see if last updated 
 #this next block grabs every match from every regional from the team list supplied in the original stuffs link
 while ( n >= 0 ): #as long as we have more than one team left in out list counter 
     teamiterate = teams[n] #use that teams index to get the team_key  
-    linkM = 'https://www.thebluealliance.com/api/v3/team/' str(teamiterate)'/event/'2018mndu'/matches'
+    linkM = 'https://www.thebluealliance.com/api/v3/team/' + str(teamiterate) + '/event/2018mndu/matches'
     tempteamjsontext = requests.get(linkR, params=status) #then assign the json file we retrive for that team to "tempteamjsontext"
     regionaltext = json.loads(tempteamjsontext.text) #change the json file we get to a readable list
     for i in regionaltext: #now we iterate through this list
@@ -86,3 +86,4 @@ if (date["date"] != str(datetime.date.today())): #Checks to see if last updated 
         "date": date
         }
         json.dump(dateJson, outfile)         
+
