@@ -1,6 +1,7 @@
 import requests #stuff for https data retreaval
 import json #Cuz the datas steralized 
 import os #cuz file path stuff
+import datetime
 
 TBA = 'https://www.thebluealliance.com/api/v3'
 status = {'X-TBA-Auth-Key':'ir3K1D1jaFLVPteNNBo7Q3CeZocBaEU8kIygdLmBMqHOq7fthFiwffAbi5s25NpO'} #seting up auth key
@@ -21,20 +22,24 @@ print(teams[0]) #Prints team 0 in list
 while ( n >= 0 ): #works backwards to 0 listing off all team numbers 
     print(teams[n])
     n = n - 1
-    
-n = len(teams) - 1 #resetting the team list for my while loop iteration
 
-regionals = [] #making a list of regionals attended by the teams in the "teams" list
-while ( n >= 0 ): #as long as we have more than one team left in out list counter 
-    teamiterate = teams[n] #use that teams index to get the team_key  
-    linkR = 'https://www.thebluealliance.com/api/v3/team/'+ str(teamiterate) + '/events/2018'
-    tempteamjsontext = requests.get(linkR, params=status) #then assign the json file we retrive for that team to "tempteamjsontext"
-    regionaltext = json.loads(tempteamjsontext.text) #change the json file we get to a readable list
-    for i in regionaltext: #now we iterate through this list
-        regionals.append("2018" + i["event_code"]) #and add every event code to the list "regionals"
-    n = n - 1 #now change our list counter down one and do this for each subsequent team until it gets to zero
-regionals=list(set(regionals)) #this gets rid of duplicates in the list "regionals"
-#the list "regionals" now has all of the events attended by all of the teams in the regional specified in the original stuffs link
+with open('data/events/last_updated.json', 'r') as lastUpdate:
+    date = json.load(lastUpdate)
+    
+if (date["date"] != str(datetime.date.today())): #Checks to see if last updated json was created
+    n = len(teams) - 1 #resetting the team list for my while loop iteration
+    
+    regionals = [] #making a list of regionals attended by the teams in the "teams" list
+    while ( n >= 0 ): #as long as we have more than one team left in out list counter 
+        teamiterate = teams[n] #use that teams index to get the team_key  
+        linkR = 'https://www.thebluealliance.com/api/v3/team/'+ str(teamiterate) + '/events/2018'
+        tempteamjsontext = requests.get(linkR, params=status) #then assign the json file we retrive for that team to "tempteamjsontext"
+        regionaltext = json.loads(tempteamjsontext.text) #change the json file we get to a readable list
+        for i in regionaltext: #now we iterate through this list
+            regionals.append("2018" + i["event_code"]) #and add every event code to the list "regionals"
+        n = n - 1 #now change our list counter down one and do this for each subsequent team until it gets to zero
+    regionals=list(set(regionals)) #this gets rid of duplicates in the list "regionals"
+    #the list "regionals" now has all of the events attended by all of the teams in the regional specified in the original stuffs link
 
 #this next block grabs every match from every regional from the team list supplied in the original stuffs link
 while ( n >= 0 ): #as long as we have more than one team left in out list counter 
@@ -62,15 +67,25 @@ Flieing ideas
             2018mndu
 """
 
-def eventMatchPuller(eventKey):
+def eventMatchPuller(eventKey): #Function for requesting event matches and then writing them to a file path
     evData = requests.get(TBA + '/event/' + eventKey + '/matches', params=status)
     evDataJson = json.loads(evData.text)
-    if not os.path.exists('data/events/'):
+    if not os.path.exists('data/events/'): #Checks that the file path exists before writing to it
         os.makedirs('data/events/')
     with open('data/events/' + eventKey + '.json', 'w') as outfile:
         json.dump(evDataJson, outfile)
 
-for i in regionals:
-    eventMatchPuller(i)
 
-eventMatchPuller('2018mndu')
+if (date["date"] != str(datetime.date.today())): #Checks to see if last updated json was created
+    for i in regionals:
+        eventMatchPuller(i)
+
+
+if (date["date"] != str(datetime.date.today())): #Checks to see if last updated json was created
+    with open('data/events/' + 'last_updated' + '.json', 'w') as outfile: #creats json file and puts the data in it
+        date = str(datetime.date.today())
+        dateJson = {
+        "date": date
+        }
+        json.dump(dateJson, outfile) 
+        
