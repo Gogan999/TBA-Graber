@@ -68,11 +68,9 @@ def eventMatchPuller(eventKey): #Function for requesting event matches and then 
     with open('data/events/' + eventKey + '.json', 'w') as outfile:
         json.dump(evDataJson, outfile)
 
-
 if (date["date"] != str(datetime.date.today())): #Checks to see if last updated json was created
     for i in regionals:
         eventMatchPuller(i)
-
 
 if (date["date"] != str(datetime.date.today())): #Checks to see if last updated json was created
     with open('data/events/' + 'last_updated' + '.json', 'w') as outfile: #creats json file and puts the data in it
@@ -80,5 +78,4 @@ if (date["date"] != str(datetime.date.today())): #Checks to see if last updated 
         dateJson = {
         "date": date
         }
-        json.dump(dateJson, outfile) 
-        
+        json.dump(dateJson, outfile)         
